@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>OmniDrop — Cross-Platform File, Video, PDF & Text Sender</title>
-  <meta name="description" content="Serverless peer-to-peer file, video, PDF, text and link sender. Works cross-platform and cross-browser without installation." />
+  <title>OmniDrop — Universal Cross-Platform File, Video, PDF & Text Sender</title>
+  <meta name="description" content="Instant serverless peer-to-peer file, video, PDF, text and link sender. Works cross-platform and cross-browser without installation." />
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -61,12 +61,12 @@
     
     /* Glassmorphism helpers */
     .glass-panel {
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
     }
     .dark .glass-panel {
-      background: rgba(17, 24, 39, 0.8);
+      background: rgba(17, 24, 39, 0.85);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
     }
@@ -111,9 +111,9 @@
       <!-- Header Actions -->
       <div class="flex items-center space-x-2">
         <!-- Connection Status Pill -->
-        <div id="nav-status-badge" class="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-          <span id="nav-status-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
-          <span id="nav-status-text">Initializing P2P...</span>
+        <div id="nav-status-badge" class="flex items-center space-x-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+          <span id="nav-status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+          <span id="nav-status-text">Connecting to network...</span>
         </div>
 
         <!-- Help / Info Modal Trigger -->
@@ -150,8 +150,8 @@
   <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6 space-y-6">
 
     <!-- Pairing & Connection Bar -->
-    <section class="glass-panel rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+    <section class="glass-panel rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
         
         <!-- My Device Info -->
         <div class="lg:col-span-5 flex items-center justify-between bg-slate-100/70 dark:bg-slate-900/80 p-4 rounded-xl border border-slate-200/80 dark:border-slate-800">
@@ -164,10 +164,19 @@
             <div>
               <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Your Device Peer ID</div>
               <div class="flex items-center space-x-2 mt-0.5">
-                <span id="my-peer-id" class="font-mono font-bold text-lg tracking-wider text-slate-800 dark:text-slate-100 select-all">Connecting...</span>
-                <button id="copy-my-id-btn" title="Copy ID" class="text-slate-400 hover:text-brand-600 transition">
+                <span id="my-peer-id" class="font-mono font-bold text-base sm:text-lg tracking-wider text-slate-800 dark:text-slate-100 select-all">Connecting...</span>
+                
+                <!-- Copy ID Button -->
+                <button id="copy-my-id-btn" title="Copy ID" class="p-1 rounded text-slate-400 hover:text-brand-600 hover:bg-slate-200 dark:hover:bg-slate-800 transition">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </button>
+
+                <!-- Refresh / Reconnect Button -->
+                <button id="refresh-peer-btn" title="Regenerate ID / Reconnect" class="p-1 rounded text-slate-400 hover:text-brand-600 hover:bg-slate-200 dark:hover:bg-slate-800 transition">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
                 </button>
               </div>
@@ -184,35 +193,54 @@
         </div>
 
         <!-- Connect to Target Device -->
-        <div class="lg:col-span-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-          <div class="relative flex-1">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-              </svg>
+        <div class="lg:col-span-7 space-y-2">
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div class="relative flex-1">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <input 
+                id="target-peer-input" 
+                type="text" 
+                placeholder="Enter receiver's ID (e.g. OMNI-7B9X2)" 
+                class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 font-mono text-sm uppercase"
+              />
             </div>
-            <input 
-              id="target-peer-input" 
-              type="text" 
-              placeholder="Enter receiver's ID (e.g. DROP-8412)" 
-              class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 font-mono text-sm uppercase"
-            />
+            <button 
+              id="connect-peer-btn" 
+              class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-sm transition shadow-md shadow-brand-500/20 flex items-center justify-center space-x-2 whitespace-nowrap active:scale-95"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+              </svg>
+              <span id="connect-btn-label">Connect Device</span>
+            </button>
           </div>
-          <button 
-            id="connect-peer-btn" 
-            class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-sm transition shadow-md shadow-brand-500/20 flex items-center justify-center space-x-2 whitespace-nowrap active:scale-95"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-            </svg>
-            <span>Connect Device</span>
-          </button>
+          
+          <!-- Live Feedback / Instructions under Connect input -->
+          <div id="connection-feedback" class="text-xs text-slate-500 dark:text-slate-400 flex items-center justify-between">
+            <span id="connection-feedback-text">Ready to connect. Enter the ID shown on your second device or scan the QR.</span>
+            <button id="troubleshoot-btn" class="text-brand-600 dark:text-brand-400 hover:underline font-semibold ml-2">Troubleshoot / Logs</button>
+          </div>
         </div>
 
       </div>
 
+      <!-- Discovered Local Devices / Tabs Banner (Instant Local Pairing) -->
+      <div id="local-tab-banner" class="hidden p-3 bg-brand-50 dark:bg-slate-800/80 rounded-xl border border-brand-200 dark:border-brand-900/60 flex items-center justify-between text-xs">
+        <div class="flex items-center space-x-2 text-brand-700 dark:text-brand-300">
+          <span class="w-2 h-2 rounded-full bg-brand-500 animate-ping"></span>
+          <span>Detected another OmniDrop tab/device nearby: <strong id="local-peer-id" class="font-mono font-bold">OMNI-XXXX</strong></span>
+        </div>
+        <button id="connect-local-tab-btn" class="px-3 py-1 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-bold transition shadow-sm">
+          Connect Instantly
+        </button>
+      </div>
+
       <!-- Active Connection Banner -->
-      <div id="connected-banner" class="hidden mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-sm">
+      <div id="connected-banner" class="hidden pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-sm">
         <div class="flex items-center space-x-2 text-emerald-600 dark:text-emerald-400 font-medium">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
           <span>Connected with: <strong id="connected-peer-label" class="font-mono font-bold underline">None</strong></span>
@@ -223,7 +251,7 @@
       </div>
     </section>
 
-    <!-- Main Workspace (Sender on Left/Top, Feed on Right/Bottom) -->
+    <!-- Main Workspace (Sender on Left, Feed on Right) -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
       <!-- LEFT: Sender Controls (7 Cols) -->
@@ -391,6 +419,46 @@
 
     </div>
 
+    <!-- Collapsible Troubleshooting & Diagnostics Console -->
+    <details id="troubleshoot-drawer" class="glass-panel rounded-2xl border border-slate-200 dark:border-slate-800 p-4 text-xs space-y-3">
+      <summary class="font-bold text-slate-700 dark:text-slate-300 cursor-pointer flex items-center justify-between select-none">
+        <span class="flex items-center space-x-2">
+          <span>🛠️ Live Diagnostics & Troubleshooting Guide</span>
+        </span>
+        <span class="text-[11px] text-brand-600 dark:text-brand-400 font-semibold">Toggle Logs</span>
+      </summary>
+      
+      <div class="pt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <p class="font-semibold text-slate-800 dark:text-slate-200">Why does it say "Connecting..."?</p>
+          <ul class="list-disc list-inside space-y-1 text-slate-500 dark:text-slate-400 leading-relaxed">
+            <li><strong>Both devices must have OmniDrop open</strong> at the same time. WebRTC does not queue messages when offline.</li>
+            <li><strong>Ensure you typed the receiver's ID</strong> (not your own ID).</li>
+            <li><strong>Testing across two tabs on the same computer?</strong> OmniDrop automatically syncs via local bus — look for the "Detected another tab" banner above!</li>
+            <li><strong>On Mobile Cellular (4G/5G)?</strong> Mobile carriers sometimes use strict CGNAT firewalls. Try connecting both devices to the same Wi-Fi network.</li>
+          </ul>
+          <div class="pt-2 flex space-x-2">
+            <button id="restart-signaling-btn" class="px-3 py-1.5 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 font-bold transition">
+              Restart Signaling
+            </button>
+            <button id="copy-direct-pair-link" class="px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-bold transition">
+              Copy Direct Pairing Link
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-semibold text-slate-800 dark:text-slate-200">Real-time Connection Log:</span>
+            <button id="clear-logs-btn" class="text-[10px] text-slate-400 hover:text-rose-500">Clear</button>
+          </div>
+          <div id="debug-log-box" class="h-32 bg-slate-900 text-slate-300 font-mono text-[10px] p-2 rounded-xl overflow-y-auto space-y-0.5 border border-slate-800">
+            <div>[System] Initializing OmniDrop...</div>
+          </div>
+        </div>
+      </div>
+    </details>
+
   </main>
 
   <!-- FOOTER -->
@@ -409,7 +477,7 @@
 
   <!-- MODAL: QR Code Modal (Pairing / Custom Text) -->
   <div id="qr-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative animate-scale-up">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative">
       <button id="close-qr-modal" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -444,7 +512,7 @@
         </button>
       </div>
       <div id="preview-content-box" class="flex-1 overflow-auto p-4 flex items-center justify-center bg-slate-950 min-h-[300px]">
-        <!-- Dynamic Preview Elements (Video, PDF iframe/embed, Image) injected here -->
+        <!-- Dynamic Preview Elements (Video, PDF iframe, Image) injected here -->
       </div>
     </div>
   </div>
@@ -482,13 +550,8 @@
         </div>
 
         <div class="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl space-y-1">
-          <p class="font-bold text-slate-900 dark:text-slate-100">🔒 How Direct Transfer Works:</p>
-          <p>Transfers travel directly between devices using <strong>WebRTC DataChannels</strong>. Files never touch any intermediary storage or third-party cloud. For large files, chunked streaming ensures seamless transfer even on mobile browsers.</p>
-        </div>
-
-        <div class="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl space-y-1">
-          <p class="font-bold text-slate-900 dark:text-slate-100">💡 Instant Mobile Pairing:</p>
-          <p>Click <strong>"Scan QR"</strong> at the top. Point your iPhone or Android phone camera at the screen to open the URL. Both devices will pair automatically!</p>
+          <p class="font-bold text-slate-900 dark:text-slate-100">🔒 Direct Peer-to-Peer Transfer:</p>
+          <p>Files travel directly between devices using WebRTC DataChannels. Files never touch any server or cloud. For local testing across tabs or browsers on the same computer, an automatic high-speed bus handles transfers instantly.</p>
         </div>
       </div>
     </div>
@@ -500,7 +563,7 @@
       'use strict';
 
       // --- State Management ---
-      const CHUNK_SIZE = 32 * 1024; // 32KB chunks for reliable WebRTC cross-platform transfer
+      const CHUNK_SIZE = 32 * 1024; // 32KB chunks for cross-platform WebRTC streaming
       let peer = null;
       let activeConnection = null;
       let myPeerId = null;
@@ -508,6 +571,35 @@
       let soundEnabled = true;
       let incomingTransfers = {}; // fileId -> { meta, chunks: [], receivedBytes: 0, startTime }
       let audioCtx = null;
+      let connectionWatchdog = null;
+      let isLocalTabConnection = false;
+      let localTabId = null;
+
+      // BroadcastChannel for instant local testing and peer discovery
+      const localBus = window.BroadcastChannel ? new BroadcastChannel('omnidrop_local_bus') : null;
+
+      // --- Debug Logger ---
+      const debugLogBox = document.getElementById('debug-log-box');
+      function logDebug(msg) {
+        const time = new Date().toLocaleTimeString();
+        console.log(`[OmniDrop ${time}]`, msg);
+        if (debugLogBox) {
+          const row = document.createElement('div');
+          row.textContent = `[${time}] ${msg}`;
+          debugLogBox.appendChild(row);
+          debugLogBox.scrollTop = debugLogBox.scrollHeight;
+        }
+      }
+
+      document.getElementById('clear-logs-btn').addEventListener('click', () => {
+        debugLogBox.innerHTML = '';
+      });
+
+      document.getElementById('troubleshoot-btn').addEventListener('click', () => {
+        const drawer = document.getElementById('troubleshoot-drawer');
+        drawer.open = !drawer.open;
+        if (drawer.open) drawer.scrollIntoView({ behavior: 'smooth' });
+      });
 
       // --- Audio Synth Feedback ---
       function playTone(type) {
@@ -559,10 +651,14 @@
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
       }
 
-      // --- Helper: Generate short human-readable room id ---
-      function generateShortId() {
-        const rand = Math.floor(1000 + Math.random() * 9000);
-        return 'DROP-' + rand;
+      // --- Helper: Generate Collision-Free High-Entropy Short ID ---
+      function generateCleanId() {
+        const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'; // base32 without confusing chars (0, O, 1, I)
+        let code = '';
+        for (let i = 0; i < 5; i++) {
+          code += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return 'OMNI-' + code;
       }
 
       // --- Helper: Check if string is a URL ---
@@ -575,7 +671,7 @@
         }
       }
 
-      // --- Helper: Determine device icon ---
+      // --- Device Icon ---
       function updateDeviceIcon() {
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         const iconContainer = document.getElementById('device-icon');
@@ -588,7 +684,7 @@
         }
       }
 
-      // --- Dark Mode Handler ---
+      // --- Dark Mode ---
       const themeToggle = document.getElementById('theme-toggle');
       const sunIcon = document.getElementById('sun-icon');
       const moonIcon = document.getElementById('moon-icon');
@@ -625,44 +721,110 @@
         soundOff.classList.toggle('hidden', soundEnabled);
       });
 
-      // --- Navigation Status Badge ---
-      function setConnectionStatus(state, peerName = '') {
-        const dot = document.getElementById('nav-status-dot');
-        const text = document.getElementById('nav-status-text');
-        const badge = document.getElementById('nav-status-badge');
-        const banner = document.getElementById('connected-banner');
-        const connectedLabel = document.getElementById('connected-peer-label');
+      // --- Navigation & Connection Status Updates ---
+      const dot = document.getElementById('nav-status-dot');
+      const text = document.getElementById('nav-status-text');
+      const banner = document.getElementById('connected-banner');
+      const connectedLabel = document.getElementById('connected-peer-label');
+      const feedbackText = document.getElementById('connection-feedback-text');
+      const connectBtnLabel = document.getElementById('connect-btn-label');
 
-        badge.classList.remove('hidden');
-
-        if (state === 'ready') {
-          dot.className = 'w-2 h-2 rounded-full bg-blue-500';
-          text.textContent = 'Waiting for peer...';
+      function setConnectionStatus(state, info = '') {
+        if (state === 'initializing') {
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse';
+          text.textContent = 'Connecting to network...';
+          feedbackText.textContent = 'Connecting to signaling network...';
           banner.classList.add('hidden');
-        } else if (state === 'connecting') {
-          dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-ping';
-          text.textContent = 'Connecting...';
-        } else if (state === 'connected') {
-          dot.className = 'w-2 h-2 rounded-full bg-emerald-500';
-          text.textContent = 'Connected: ' + peerName;
+          connectBtnLabel.textContent = 'Connect Device';
+        } 
+        else if (state === 'ready') {
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-blue-500';
+          text.textContent = 'Ready (Waiting for peer)';
+          feedbackText.textContent = 'Ready. Enter receiver\'s ID above or scan QR.';
+          banner.classList.add('hidden');
+          connectBtnLabel.textContent = 'Connect Device';
+        } 
+        else if (state === 'connecting') {
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping';
+          text.textContent = `Connecting to ${info}...`;
+          feedbackText.textContent = `P2P Handshake in progress with ${info}. Ensure the receiver is online.`;
+          connectBtnLabel.textContent = 'Connecting...';
+        } 
+        else if (state === 'connected') {
+          cancelWatchdog();
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
+          text.textContent = 'Connected: ' + info;
+          feedbackText.textContent = `Connected with ${info}. You can now send files, videos, PDFs and text!`;
           banner.classList.remove('hidden');
-          connectedLabel.textContent = peerName;
+          connectedLabel.textContent = info;
+          connectBtnLabel.textContent = 'Connected ✓';
           playTone('connected');
-        } else if (state === 'disconnected') {
-          dot.className = 'w-2 h-2 rounded-full bg-rose-500';
-          text.textContent = 'Disconnected';
+        } 
+        else if (state === 'timeout') {
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-rose-500';
+          text.textContent = 'Connection Timed Out';
+          feedbackText.innerHTML = `<span class="text-rose-500 font-bold">Could not reach ${info}.</span> Make sure the receiver page is currently open and has an active ID.`;
           banner.classList.add('hidden');
+          connectBtnLabel.textContent = 'Retry Connect';
+        }
+        else if (state === 'disconnected') {
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-slate-400';
+          text.textContent = 'Disconnected';
+          feedbackText.textContent = 'Disconnected from device. Enter an ID to reconnect.';
+          banner.classList.add('hidden');
+          connectBtnLabel.textContent = 'Connect Device';
+        }
+        else if (state === 'error') {
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-rose-500';
+          text.textContent = 'Error';
+          feedbackText.innerHTML = `<span class="text-rose-500 font-semibold">${info}</span>`;
+          connectBtnLabel.textContent = 'Connect Device';
+        }
+      }
+
+      function startWatchdog(targetId) {
+        cancelWatchdog();
+        let remaining = 12;
+        setConnectionStatus('connecting', `${targetId} (${remaining}s)`);
+        
+        connectionWatchdog = setInterval(() => {
+          remaining--;
+          if (remaining > 0) {
+            setConnectionStatus('connecting', `${targetId} (${remaining}s)`);
+          } else {
+            cancelWatchdog();
+            logDebug(`Connection to ${targetId} timed out after 12s.`);
+            setConnectionStatus('timeout', targetId);
+          }
+        }, 1000);
+      }
+
+      function cancelWatchdog() {
+        if (connectionWatchdog) {
+          clearInterval(connectionWatchdog);
+          connectionWatchdog = null;
         }
       }
 
       // --- PeerJS WebRTC Initialization ---
       function initPeer() {
-        const customId = generateShortId();
-        peer = new Peer(customId, {
+        if (peer && !peer.destroyed) {
+          try { peer.destroy(); } catch (_) {}
+        }
+
+        const candidateId = generateCleanId();
+        myPeerId = null;
+        document.getElementById('my-peer-id').textContent = 'Connecting...';
+        setConnectionStatus('initializing');
+        logDebug(`Initializing Peer with ID: ${candidateId}...`);
+
+        peer = new Peer(candidateId, {
           debug: 1,
           config: {
             iceServers: [
               { urls: 'stun:stun.l.google.com:19302' },
+              { urls: 'stun:stun1.l.google.com:19302' },
+              { urls: 'stun:stun.cloudflare.com:3478' },
               { urls: 'stun:global.stun.twilio.com:3478' }
             ]
           }
@@ -672,79 +834,234 @@
           myPeerId = id;
           document.getElementById('my-peer-id').textContent = id;
           setConnectionStatus('ready');
+          logDebug(`Peer broker online. My ID: ${id}`);
 
-          // Check if auto-connect hash was passed in URL (e.g. #connect=DROP-1234 or ?pair=DROP-1234)
+          // Broadcast presence on local bus for instant same-browser pairing
+          announceLocalPresence();
+
+          // Check if auto-connect hash was passed in URL (e.g. #pair=OMNI-XXXX)
           checkUrlHashForAutoConnect();
         });
 
         peer.on('connection', (conn) => {
+          logDebug(`Incoming WebRTC connection from: ${conn.peer}`);
           setupConnection(conn);
         });
 
         peer.on('error', (err) => {
-          console.error('Peer error:', err);
-          if (err.type === 'peer-unavailable') {
-            alert('Device ID not found. Ensure the receiver is open and connected.');
+          logDebug(`Peer error [${err.type}]: ${err.message}`);
+          cancelWatchdog();
+
+          if (err.type === 'unavailable-id') {
+            // ID already taken, retry with new random ID
+            logDebug('ID collision, regenerating...');
+            setTimeout(initPeer, 300);
+            return;
           }
-          setConnectionStatus('ready');
+
+          if (err.type === 'peer-unavailable') {
+            setConnectionStatus('error', 'Device ID not found. Ensure the receiver has OmniDrop open.');
+            return;
+          }
+
+          if (err.type === 'network' || err.type === 'server-error' || err.type === 'socket-error') {
+            setConnectionStatus('error', 'Network/Signaling issue. Click the refresh button to retry.');
+            document.getElementById('my-peer-id').textContent = 'Offline (Click Refresh)';
+          }
         });
 
         peer.on('disconnected', () => {
-          setConnectionStatus('disconnected');
+          logDebug('Peer disconnected from broker.');
+          // PeerJS disconnected from signaling server, attempt automatic reconnect
+          if (peer && !peer.destroyed) {
+            peer.reconnect();
+          }
         });
       }
 
-      // --- Handle Connected Peer ---
+      // --- Connect to Peer (WebRTC) ---
+      function connectToTarget(targetId) {
+        if (!peer || !myPeerId) {
+          alert('Signaling network is still initializing. Please wait a moment.');
+          return;
+        }
+
+        targetId = targetId.trim().toUpperCase();
+        if (!targetId) {
+          alert('Please enter a receiver Peer ID.');
+          return;
+        }
+
+        if (targetId === myPeerId) {
+          alert("You entered your own device ID! Open this page on a second device (phone/PC) or a new browser window to pair.");
+          return;
+        }
+
+        logDebug(`Connecting to ${targetId}...`);
+        startWatchdog(targetId);
+
+        try {
+          const conn = peer.connect(targetId, {
+            reliable: true,
+            serialization: 'binary'
+          });
+          setupConnection(conn);
+        } catch (err) {
+          logDebug('connect error: ' + err);
+          cancelWatchdog();
+          setConnectionStatus('error', err.message);
+        }
+      }
+
+      // --- Setup Connection Handlers ---
       function setupConnection(conn) {
         activeConnection = conn;
+        isLocalTabConnection = false;
 
-        conn.on('open', () => {
+        const onConnectSuccess = () => {
+          cancelWatchdog();
           setConnectionStatus('connected', conn.peer);
           document.getElementById('target-peer-input').value = conn.peer;
-        });
+          logDebug(`DataChannel connected successfully with: ${conn.peer}`);
+        };
+
+        // Important: If connection is ALREADY open, handle immediately!
+        if (conn.open) {
+          onConnectSuccess();
+        } else {
+          conn.on('open', onConnectSuccess);
+        }
 
         conn.on('data', (data) => {
           handleIncomingData(data);
         });
 
         conn.on('close', () => {
+          logDebug(`Connection closed with ${conn.peer}`);
           setConnectionStatus('disconnected');
           activeConnection = null;
         });
 
         conn.on('error', (err) => {
-          console.error('Connection error:', err);
+          logDebug(`Connection error on ${conn.peer}: ${err}`);
+          cancelWatchdog();
+          setConnectionStatus('error', 'Connection failed: ' + (err.message || err.type));
         });
+
+        // Monitor underlying RTCPeerConnection ICE states
+        if (conn.peerConnection) {
+          conn.peerConnection.addEventListener('iceconnectionstatechange', () => {
+            const iceState = conn.peerConnection.iceConnectionState;
+            logDebug(`ICE connection state: ${iceState}`);
+            if (iceState === 'connected' || iceState === 'completed') {
+              onConnectSuccess();
+            } else if (iceState === 'failed') {
+              cancelWatchdog();
+              setConnectionStatus('error', 'Direct P2P blocked by firewall/NAT.');
+            }
+          });
+        }
       }
 
-      // --- Connect to Target Peer ---
+      // --- Connect Button Action ---
       const connectBtn = document.getElementById('connect-peer-btn');
       const targetInput = document.getElementById('target-peer-input');
 
       connectBtn.addEventListener('click', () => {
         const targetId = targetInput.value.trim().toUpperCase();
-        if (!targetId) {
-          alert('Please enter a receiver Peer ID.');
-          return;
-        }
-        if (targetId === myPeerId) {
-          alert("You cannot connect to your own device ID! Open this page on a second phone, tablet or PC to pair.");
-          return;
-        }
+        connectToTarget(targetId);
+      });
 
-        setConnectionStatus('connecting');
-        const conn = peer.connect(targetId, { reliable: true });
-        setupConnection(conn);
+      targetInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') connectBtn.click();
       });
 
       // Disconnect
       document.getElementById('disconnect-btn').addEventListener('click', () => {
         if (activeConnection) {
-          activeConnection.close();
+          try { activeConnection.close(); } catch (_) {}
           activeConnection = null;
-          setConnectionStatus('ready');
         }
+        if (isLocalTabConnection) {
+          isLocalTabConnection = false;
+          localTabId = null;
+        }
+        setConnectionStatus('ready');
       });
+
+      // Refresh / Reconnect Button
+      document.getElementById('refresh-peer-btn').addEventListener('click', () => {
+        initPeer();
+      });
+      document.getElementById('restart-signaling-btn').addEventListener('click', () => {
+        initPeer();
+      });
+
+      // --- Local Tab Presence & Bus (Instant Same-Computer Testing) ---
+      function announceLocalPresence() {
+        if (!localBus || !myPeerId) return;
+        localBus.postMessage({
+          type: 'presence',
+          id: myPeerId,
+          timestamp: Date.now()
+        });
+      }
+
+      // Periodic heartbeat for nearby local tab discovery
+      setInterval(announceLocalPresence, 4000);
+
+      if (localBus) {
+        localBus.onmessage = (e) => {
+          const data = e.data;
+          if (!data || !myPeerId) return;
+
+          // Detected another local tab
+          if (data.type === 'presence' && data.id && data.id !== myPeerId) {
+            const banner = document.getElementById('local-tab-banner');
+            const localIdSpan = document.getElementById('local-peer-id');
+            const connectLocalBtn = document.getElementById('connect-local-tab-btn');
+
+            if (!activeConnection) {
+              localIdSpan.textContent = data.id;
+              banner.classList.remove('hidden');
+
+              connectLocalBtn.onclick = () => {
+                targetInput.value = data.id;
+                connectToTarget(data.id);
+                // Also trigger instant local bus handshake
+                localBus.postMessage({
+                  type: 'pair-request',
+                  from: myPeerId,
+                  to: data.id
+                });
+              };
+            }
+          }
+
+          // Local pair request
+          if (data.type === 'pair-request' && data.to === myPeerId) {
+            isLocalTabConnection = true;
+            localTabId = data.from;
+            setConnectionStatus('connected', data.from + ' (Local Tab)');
+            localBus.postMessage({
+              type: 'pair-accept',
+              from: myPeerId,
+              to: data.from
+            });
+          }
+
+          if (data.type === 'pair-accept' && data.to === myPeerId) {
+            isLocalTabConnection = true;
+            localTabId = data.from;
+            setConnectionStatus('connected', data.from + ' (Local Tab)');
+          }
+
+          // Data transferred over local bus
+          if (data.type === 'bus-payload' && data.to === myPeerId) {
+            handleIncomingData(data.payload);
+          }
+        };
+      }
 
       // --- QR Code Modal Management ---
       let qrcodeObj = null;
@@ -754,6 +1071,11 @@
       const qrContainer = document.getElementById('qrcode-container');
       const qrModalUrl = document.getElementById('qr-modal-url');
       const copyQrUrlBtn = document.getElementById('copy-qr-url-btn');
+
+      function getPairingUrl() {
+        const base = window.location.origin + window.location.pathname;
+        return `${base}#pair=${myPeerId || ''}`;
+      }
 
       function showQrCode(text, title = 'Scan to Connect', desc = 'Scan with your mobile camera to pair automatically.') {
         document.getElementById('qr-modal-title').textContent = title;
@@ -774,10 +1096,11 @@
       }
 
       openQrBtn.addEventListener('click', () => {
-        if (!myPeerId) return;
-        const currentUrl = new URL(window.location.href);
-        currentUrl.hash = `pair=${myPeerId}`;
-        showQrCode(currentUrl.toString(), 'Scan to Pair Mobile', 'Point your phone camera here to open OmniDrop and connect immediately.');
+        if (!myPeerId) {
+          alert('Still connecting to network. Please wait a moment.');
+          return;
+        }
+        showQrCode(getPairingUrl(), 'Scan to Pair Mobile', 'Point your iPhone or Android camera at this QR code to connect instantly.');
       });
 
       closeQrBtn.addEventListener('click', () => {
@@ -799,14 +1122,23 @@
         });
       });
 
-      // Check auto-connect from hash / query
+      // Copy Direct Pair Link from Troubleshooting drawer
+      document.getElementById('copy-direct-pair-link').addEventListener('click', () => {
+        if (!myPeerId) return;
+        navigator.clipboard.writeText(getPairingUrl()).then(() => {
+          alert('Direct pairing link copied to clipboard:\n' + getPairingUrl());
+        });
+      });
+
+      // Auto-connect from URL hash (e.g. #pair=OMNI-XXXX)
       function checkUrlHashForAutoConnect() {
         const hash = window.location.hash;
         if (hash.includes('pair=')) {
           const match = hash.match(/pair=([A-Za-z0-9_-]+)/);
           if (match && match[1] && match[1] !== myPeerId) {
+            logDebug(`Auto-connecting to peer from URL: ${match[1]}`);
             targetInput.value = match[1];
-            connectBtn.click();
+            connectToTarget(match[1]);
           }
         }
       }
@@ -831,7 +1163,7 @@
         panelFiles.classList.add('hidden');
       });
 
-      // --- Drag and Drop File Handlers ---
+      // --- Drag and Drop Handlers ---
       const dropZone = document.getElementById('file-drop-zone');
       const fileInput = document.getElementById('file-input');
       const dropOverlay = document.getElementById('drop-overlay');
@@ -842,7 +1174,6 @@
         fileInput.value = '';
       });
 
-      // Window-level drag and drop
       ['dragenter', 'dragover'].forEach(eventName => {
         window.addEventListener(eventName, (e) => {
           e.preventDefault();
@@ -889,7 +1220,7 @@
         if (!foundFile) {
           const text = e.clipboardData.getData('text');
           if (text && text.trim() && !panelText.classList.contains('hidden')) {
-            // Text is automatically inserted into active textarea if focused
+            // textarea automatically accepts pasted text
           }
         }
       });
@@ -963,9 +1294,8 @@
           stagedList.appendChild(row);
         });
 
-        // Attach remove triggers
         stagedList.querySelectorAll('.remove-staged-btn').forEach(btn => {
-          btn.addEventListener('click', (e) => {
+          btn.addEventListener('click', () => {
             const idx = parseInt(btn.getAttribute('data-index'), 10);
             stagedFiles.splice(idx, 1);
             renderStagedFiles();
@@ -978,7 +1308,7 @@
         renderStagedFiles();
       });
 
-      // --- Progress Card Controller ---
+      // --- Progress Controller ---
       const progressCard = document.getElementById('transfer-progress-card');
       const progressDir = document.getElementById('transfer-direction-label');
       const progressPercentage = document.getElementById('transfer-percentage');
@@ -1000,13 +1330,30 @@
         progressFill.style.width = '0%';
       }
 
-      // --- Send Files Over WebRTC DataChannel (Chunked Streaming) ---
+      // --- Send Universal Payload (WebRTC or Local Bus) ---
+      function sendDataToPeer(payload) {
+        if (activeConnection && activeConnection.open) {
+          activeConnection.send(payload);
+          return true;
+        } else if (isLocalTabConnection && localBus && localTabId) {
+          localBus.postMessage({
+            type: 'bus-payload',
+            to: localTabId,
+            payload: payload
+          });
+          return true;
+        }
+        return false;
+      }
+
+      // --- Send Files (Chunked Streaming) ---
       const sendStagedBtn = document.getElementById('send-staged-files-btn');
       let isSending = false;
 
       sendStagedBtn.addEventListener('click', async () => {
-        if (!activeConnection || !activeConnection.open) {
-          alert('No receiver device is connected! Enter a receiver ID or scan the QR code first.');
+        const isConnected = (activeConnection && activeConnection.open) || (isLocalTabConnection && localTabId);
+        if (!isConnected) {
+          alert('No receiver device is connected! Enter a receiver ID, connect to a local tab, or scan the QR code first.');
           return;
         }
 
@@ -1033,7 +1380,7 @@
         const fileId = item.id;
 
         // 1. Send File Metadata Header
-        activeConnection.send({
+        sendDataToPeer({
           type: 'file-start',
           id: fileId,
           name: file.name,
@@ -1053,13 +1400,13 @@
           const chunkBlob = file.slice(start, end);
           const arrayBuffer = await chunkBlob.arrayBuffer();
 
-          // Wait if WebRTC buffer is backing up
-          while (activeConnection.dataChannel && activeConnection.dataChannel.bufferedAmount > 1024 * 512) {
-            await new Promise(r => setTimeout(r, 15));
+          if (activeConnection && activeConnection.dataChannel) {
+            while (activeConnection.dataChannel.bufferedAmount > 1024 * 512) {
+              await new Promise(r => setTimeout(r, 15));
+            }
           }
 
-          // Send chunk header + payload
-          activeConnection.send({
+          sendDataToPeer({
             type: 'file-chunk',
             id: fileId,
             index: chunkIndex,
@@ -1100,14 +1447,15 @@
           return;
         }
 
-        if (!activeConnection || !activeConnection.open) {
+        const isConnected = (activeConnection && activeConnection.open) || (isLocalTabConnection && localTabId);
+        if (!isConnected) {
           alert('No receiver device connected. Connect to a peer or use "QR Code" / "System Share" below.');
           return;
         }
 
         const isLinkVal = isUrl(text);
 
-        activeConnection.send({
+        sendDataToPeer({
           type: 'text-message',
           content: text,
           isLink: isLinkVal,
@@ -1230,7 +1578,7 @@
       let feedItemsCount = 0;
 
       function addFeedItem(item) {
-        if (emptyFeedState) emptyFeedState.remove();
+        if (emptyFeedState && emptyFeedState.parentNode) emptyFeedState.remove();
         feedItemsCount++;
         feedCounter.textContent = feedItemsCount;
 
@@ -1312,12 +1660,10 @@
             </div>
           `;
 
-          // Download Action
           card.querySelector('.download-file-btn').addEventListener('click', () => {
             downloadBlob(item.blob, item.name);
           });
 
-          // Preview Action (Video, PDF, Image)
           if (isPreviewable) {
             card.querySelector('.preview-file-btn').addEventListener('click', () => {
               openMediaPreview(item);
@@ -1419,7 +1765,6 @@
         helpModal.classList.add('hidden');
       });
 
-      // Close modals on clicking backdrop
       [qrModal, previewModal, helpModal].forEach(modal => {
         modal.addEventListener('click', (e) => {
           if (e.target === modal) modal.classList.add('hidden');
@@ -1454,7 +1799,7 @@
           .replace(/'/g, '&#039;');
       }
 
-      // Initialize
+      // Initialize Application
       initTheme();
       updateDeviceIcon();
       initPeer();
@@ -1463,4 +1808,3 @@
   </script>
 </body>
 </html>
-
